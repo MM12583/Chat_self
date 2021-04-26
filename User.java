@@ -2,46 +2,53 @@ package multiple;
 
 import java.util.Scanner ;
 
-// Half-duplex 
+// Half-duplex ?
 public class User  implements Runnable{
 	
-	Thread chatTarget ;
+	Thread targetThread ;
 	String userName ;
 	String message ;
+	User target ;
 	
-	public User(String userName , User chatTarget) {
+	public User(String userName) {
+		
 		this.userName = userName ;
-		this.chatTarget = new Thread(chatTarget) ;
 	}
 	
+	public void probuctTarget(User target){
+		targetThread = new Thread(target) ;
+		this.target = target ;
+	}
+	
+	public void printMessage(String message){
+		System.out.println(userName + " : " + message) ;
+	}
+
 	@Override
 	public void run() {
 		
 		try (Scanner input = new Scanner(System.in)) {
 			
-			System.out.print("Enter message or \"q\" to quit ") ;
-			
-			while(input.hasNextLine()){
+			System.out.println("Enter message or \"q\" to quit ") ;
 				
-				System.out.print("message : ") ;
+			while(true){
+				
+				System.out.println(userName + " is typing message : ") ;
+				
 				message = input.nextLine() ;
 				
-				if (input.nextLine() == "q") {
+				if (message == "q") {
 					break ;
+				}else{
+					printMessage(message) ;
 				}
 				
-				System.out.println("Waiting for reply ") ;
-				chatTarget.join() ;
-				
+				//System.out.println("Waiting for reply ") ;
 			}
-			
-			
-		} catch (InterruptedException e) {
-			e.printStackTrace() ;
 		}
+		  //catch (InterruptedException e) {
+			//e.printStackTrace() ;
+		//}
 		
 	}
-
-	
-
 }
